@@ -46,15 +46,13 @@ public class Main {
         }
 
         // metoda getPlantsNeedToWater
-        PlantListManager PlantsNeedToWater = new PlantListManager();
-
         Plant newPlant4 = new Plant("Plant4", "test", LocalDate.of(2026, 4, 1), LocalDate.of(2026, 3, 1), 2);
         newPlantList.addNewPlant(newPlant4);
 
-        PlantsNeedToWater.addNewPlant(newPlantList.getPlantsNeedToWater());
+        PlantListManager PlantsNeedToWater = newPlantList.getPlantsNeedToWater();
 
-        // to do - DODĚLAT copyPlantList a getPlantsNeedToWater
-
-
+        for (Plant plant : PlantsNeedToWater.getPlantList()) {
+            System.out.println("Potřebuji zalit " + plant.getName());
+        }
     }
 }

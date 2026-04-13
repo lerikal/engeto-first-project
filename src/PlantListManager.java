@@ -3,14 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlantListManager {
-    List<Plant> plantList; //  kolekce, uchovávající objekty s informacemi o květinách
+    List<Plant> plantList = new ArrayList<>(); //  kolekce, uchovávající objekty s informacemi o květinách
 
-    // Konstruktor
-    public PlantListManager() {
-        this.plantList = new ArrayList<>();
-    }
-
-    // Výchozí přístupové metody
     public List<Plant> getPlantList() {
         return plantList;
     }
@@ -36,10 +30,8 @@ public class PlantListManager {
     }
 
     // získání kopie seznamu květin
-    public List<Plant> copyPlantList(List<Plant> original) {
-        List<Plant> copy  = new ArrayList<>();
-        copy.addAll(original);
-        return copy;
+    public void copyPlantList(List<Plant> plantList) {
+        this.plantList = new ArrayList<>(plantList);
     }
 
     // metoda, která vrátí seznam rostlin, které je třeba zalít
@@ -48,11 +40,11 @@ public class PlantListManager {
         PlantListManager plantsNeedToWater = new PlantListManager();
         LocalDate now = LocalDate.now();
 
-
         for (Plant plant : this.plantList) {
             LocalDate recommendedWatering = plant.getWatering().plusDays(plant.getFrequencyOfWatering());
+
             if (recommendedWatering.isBefore(now)) {
-                plantsNeedToWater.add(plant);
+                plantsNeedToWater.addNewPlant(plant);
             }
         }
         return plantsNeedToWater;
