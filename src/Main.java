@@ -1,13 +1,15 @@
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
 public class Main {
     public static void main(String[] args) {
         // test Úkol 1: Model dat
-        Plant newPlant1 = new Plant("Plant1", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 5);
+        Plant newPlant1 = new Plant("Plant3", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 5);
         Plant newPlant2 = new Plant("Plant2", 3);
-        Plant newPlant3 = new Plant("Plant3");
+        Plant newPlant3 = new Plant("Plant1");
 
         // metoda getWateringInfo
         System.out.println(newPlant1.getWateringInfo());
@@ -53,6 +55,23 @@ public class Main {
 
         for (Plant plant : PlantsNeedToWater.getPlantList()) {
             System.out.println("Potřebuji zalit " + plant.getName());
+        }
+
+        //Řazení a práce s rostlinami
+
+        // podle názvu -  jako výchozí varianta řazení rostlin
+        System.out.println("Seřazený list podle názvu:");
+        Collections.sort(newPlantList.plantList);
+        for (Plant plant : newPlantList.getPlantList()) {
+            System.out.println(plant.getName());
+        }
+
+        // podle data poslední zálivky
+        System.out.println("Seřazený list poslední zálivky:");
+        newPlantList.plantList.sort(Comparator.comparing(Plant::getWatering));
+
+        for (Plant plant : newPlantList.getPlantList()) {
+            System.out.println(plant.getName() + " " + plant.getWatering());
         }
     }
 }

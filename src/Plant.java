@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Plant {
+public class Plant implements Comparable<Plant> {
     private String name; // název
     private String notes; // poznámky
     private LocalDate planted; // datum, kdy byly zasazena
@@ -86,5 +86,12 @@ public class Plant {
     // Nastaví datum poslední zálivky na dnešní den.
     public void doWateringNow() {
         this.watering = LocalDate.now();
+    }
+
+    // Možnost seřadit rostliny v seznamu podle názvu.
+    // Řazení podle názvu rostliny nastav jako výchozí variantu řazení rostlin.
+    @Override
+    public int compareTo(Plant other) {
+        return this.name.compareTo(other.name);
     }
 }
