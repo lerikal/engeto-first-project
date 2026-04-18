@@ -6,10 +6,26 @@ import java.util.Comparator;
 public class Main {
 
     public static void main(String[] args) throws PlantException {
-        tests();
+        interniTesty();
+
+        // Načti seznam květin ze souboru kvetiny.txt.
+
+        // Vypiš na obrazovku informace o zálivce pro všechny květiny ze seznamu.
+
+        // Přidej novou květinu do seznamu (údaje si vymysli).
+
+        // Přidej 10 rostlin s popisem „Tulipán na prodej 1“ až „Tulipán na prodej 10“. Zasazeny byly dnes, zality také, frekvence zálivky je 14 dnů.
+
+        // Květinu na třetí pozici odeber ze seznamu (prodali jsme ji).
+
+        // Ulož seznam květin do nového souboru a ověř, že je jeho obsah odpovídá provedeným změnám.
+
+        // Vyzkoušej opětovné načtení vygenerovaného souboru.
+
+        // Vyzkoušej seřazení rostlin ve správci seznamu podle různých kritérií a výpis seřazeného seznamu.
     }
 
-    public static void tests() throws PlantException {
+    public static void interniTesty() throws PlantException {
         // test Úkol 1: Model dat
         Plant newPlant1 = new Plant("Plant3", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 5);
         Plant newPlant2 = new Plant("Plant2", 3);

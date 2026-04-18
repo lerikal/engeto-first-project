@@ -8,7 +8,6 @@ SPLNĚNO:
 - Úkol 5: Řazení a práce s rostlinami
 
 NESPLNĚNO:
-
 - Úkol 6: Načtení ze souboru a uložení do souboru
 - Úkol 7: Ověření funkčnosti aplikace
 
