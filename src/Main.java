@@ -4,7 +4,12 @@ import java.util.Comparator;
 
 
 public class Main {
+
     public static void main(String[] args) throws PlantException {
+        tests();
+    }
+
+    public static void tests() throws PlantException {
         // test Úkol 1: Model dat
         Plant newPlant1 = new Plant("Plant3", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 5);
         Plant newPlant2 = new Plant("Plant2", 3);
