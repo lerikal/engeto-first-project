@@ -9,10 +9,6 @@ public class PlantListManager {
         return plantList;
     }
 
-    public void setPlantList(List<Plant> plantList) {
-        this.plantList = plantList;
-    }
-
     // Metody
 
     // přidání nové květiny
@@ -22,10 +18,17 @@ public class PlantListManager {
 
     // získání květiny na zadaném indexu
     public Plant getPlantByIndex(int index) {
+        if (index < 0 || index >= plantList.size()) {
+            throw new IndexOutOfBoundsException("Neplatný index: " + index + ".");
+        }
         return plantList.get(index);
     }
+
     // odebrání květiny ze seznamu
     public void removePlantByIndex(int index) {
+        if (index < 0 || index >= plantList.size()) {
+            throw new IndexOutOfBoundsException("Neplatný index: " + index + ".");
+        }
         plantList.remove(index);
     }
 

@@ -131,5 +131,19 @@ public class Main {
         } catch (PlantException e) {
             System.out.println("Chyba při vytváření položky: " + e.getMessage());
         }
+
+        // získání květiny na špatném indexu
+        try {
+            System.out.println("Nazev prvni rostliny v seznamu: " + newPlantList.getPlantByIndex(100).getName());
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Chyba při získání rostliny: " + e.getMessage());
+        }
+
+        // odebrání květiny ze seznamu na špatném indexu
+        try {
+            newPlantList.removePlantByIndex(100);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Chyba při odebrání rostliny ze seznamu: " + e.getMessage());
+        }
     }
 }

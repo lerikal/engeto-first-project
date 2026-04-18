@@ -8,6 +8,8 @@ public class Plant implements Comparable<Plant> {
     private LocalDate watering; // datum poslední zálivky
     private int frequencyOfWatering; // běžnou frekvenci zálivky ve dnech
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
+
     // Konsturktory
 
     // jeden pro nastavení všech atributů
@@ -65,8 +67,6 @@ public class Plant implements Comparable<Plant> {
     }
 
     public void setWatering(LocalDate watering) throws PlantException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
-
         // zadávání data poslední zálivky — nesmí být starší než datum zasazení rostliny
         if (watering.isBefore(planted)) {
             throw new PlantException("Datum poslední zálivky nesmí být starší než datum zasazení rostliny! Datum zasazení je: " + planted.format(formatter) +
@@ -91,7 +91,6 @@ public class Plant implements Comparable<Plant> {
 
     // Vrátí textovou informaci obsahující název květiny, datum poslední zálivky a datum doporučené další zálivky.
     public String getWateringInfo() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
         LocalDate recommendedWatering = this.getWatering().plusDays(this.frequencyOfWatering);
 
         return "Název květiny: " + this.getName()
@@ -101,7 +100,10 @@ public class Plant implements Comparable<Plant> {
     }
 
     // Nastaví datum poslední zálivky na dnešní den.
-    public void doWateringNow() {
+    public void doWateringNow() throws PlantException {
+        if (LocalDate.now().isBefore(planted)) {
+            throw new PlantException("Nelze nastavit datum poslední zálevky na dnešní datum. Datum zasazení je větší než dnešní datum. Datum zasazení je: " + planted.format(formatter));
+        }
         this.watering = LocalDate.now();
     }
 
