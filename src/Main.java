@@ -1,11 +1,10 @@
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws PlantException {
         // test Úkol 1: Model dat
         Plant newPlant1 = new Plant("Plant3", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 5);
         Plant newPlant2 = new Plant("Plant2", 3);
@@ -48,7 +47,7 @@ public class Main {
         }
 
         // metoda getPlantsNeedToWater
-        Plant newPlant4 = new Plant("Plant4", "test", LocalDate.of(2026, 4, 1), LocalDate.of(2026, 3, 1), 2);
+        Plant newPlant4 = new Plant("Plant4", "test", LocalDate.of(2025, 4, 1), LocalDate.of(2026, 2, 1), 2);
         newPlantList.addNewPlant(newPlant4);
 
         PlantListManager PlantsNeedToWater = newPlantList.getPlantsNeedToWater();
@@ -72,6 +71,44 @@ public class Main {
 
         for (Plant plant : newPlantList.getPlantList()) {
             System.out.println(plant.getName() + " " + plant.getWatering());
+        }
+
+        // test chybových hlášek
+        System.out.println("Test chybových hlášek:");
+
+        // prázdný string jako název rostliny
+        try {
+            Plant newPlant99 = new Plant("", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 5);
+        } catch (PlantException e) {
+            System.out.println("Chyba při vytváření položky: " + e.getMessage());
+        }
+
+        // jedna mezera jako název rostliny
+        try {
+            Plant newPlant98 = new Plant(" ", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 5);
+        } catch (PlantException e) {
+            System.out.println("Chyba při vytváření položky: " + e.getMessage());
+        }
+
+        // nastaveni data poslední zálivky
+        try {
+            Plant newPlant97 = new Plant("newPlant97", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2022, 3, 1), 5);
+        } catch (PlantException e) {
+            System.out.println("Chyba při vytváření položky: " + e.getMessage());
+        }
+
+        // nastaveni zadávání frekvence zálivky - hodnota 0
+        try {
+            Plant newPlant96 = new Plant("newPlant96", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), 0);
+        } catch (PlantException e) {
+            System.out.println("Chyba při vytváření položky: " + e.getMessage());
+        }
+
+        // nastaveni zadávání frekvence zálivky - záporná hodnota
+        try {
+            Plant newPlant96 = new Plant("newPlant96", "test", LocalDate.of(2026, 3, 1), LocalDate.of(2026, 3, 1), -5);
+        } catch (PlantException e) {
+            System.out.println("Chyba při vytváření položky: " + e.getMessage());
         }
     }
 }

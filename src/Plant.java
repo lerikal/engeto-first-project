@@ -11,21 +11,21 @@ public class Plant implements Comparable<Plant> {
     // Konsturktory
 
     // jeden pro nastavení všech atributů
-    public Plant(String name, String notes, LocalDate planted, LocalDate watering, int frequencyOfWatering) {
-        this.name = name;
+    public Plant(String name, String notes, LocalDate planted, LocalDate watering, int frequencyOfWatering) throws PlantException {
+        this.setName(name);
         this.notes = notes;
-        this.planted = planted;
-        this.watering = watering;
-        this.frequencyOfWatering = frequencyOfWatering;
+        this.setPlanted(planted);
+        this.setWatering(watering);
+        this.setFrequencyOfWatering(frequencyOfWatering);
     }
 
     // druhý nastaví jako poznámku prázdný řetězec a datum zasazení i datum poslední zálivky nastaví na dnešní datum
-    public Plant(String name, int frequencyOfWatering) {
+    public Plant(String name, int frequencyOfWatering) throws PlantException {
         this(name, "", LocalDate.now(), LocalDate.now(), frequencyOfWatering);
     }
 
     // třetí nastaví totéž co druhý a navíc výchozí frekvenci zálivky na 7 dnů
-    public Plant(String name) {
+    public Plant(String name) throws PlantException {
         this(name, "", LocalDate.now(), LocalDate.now(), 7);
     }
 
@@ -34,7 +34,10 @@ public class Plant implements Comparable<Plant> {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws PlantException {
+        if (name == null || name.isBlank()) {
+            throw new PlantException("Název rostliny nemůže být prázdný! Zadejte název rostliny korektně.");
+        }
         this.name = name;
     }
 
@@ -50,7 +53,10 @@ public class Plant implements Comparable<Plant> {
         return planted;
     }
 
-    public void setPlanted(LocalDate planted) {
+    public void setPlanted(LocalDate planted) throws PlantException {
+        if (planted == null) {
+            throw new PlantException("Datum zasazení rostliny nemůže být prázdný! Zadejte datum zasazení rostliny korektně.");
+        }
         this.planted = planted;
     }
 
@@ -58,7 +64,14 @@ public class Plant implements Comparable<Plant> {
         return watering;
     }
 
-    public void setWatering(LocalDate watering) {
+    public void setWatering(LocalDate watering) throws PlantException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
+
+        // zadávání data poslední zálivky — nesmí být starší než datum zasazení rostliny
+        if (watering.isBefore(planted)) {
+            throw new PlantException("Datum poslední zálivky nesmí být starší než datum zasazení rostliny! Datum zasazení je: " + planted.format(formatter) +
+                    ". Datum poslední zálivky je: " + watering.format(formatter) + ".");
+        }
         this.watering = watering;
     }
 
@@ -66,7 +79,11 @@ public class Plant implements Comparable<Plant> {
         return frequencyOfWatering;
     }
 
-    public void setFrequencyOfWatering(int frequencyOfWatering) {
+    public void setFrequencyOfWatering(int frequencyOfWatering) throws PlantException {
+        // zadávání frekvence zálivky — pokud je parametrem 0 nebo záporné číslo
+        if (frequencyOfWatering <= 0) {
+            throw new PlantException("Frekvence zálivky nesmí být záporná nebo má být větší než 0! Zadaná hodnota je: " + frequencyOfWatering + ".");
+        }
         this.frequencyOfWatering = frequencyOfWatering;
     }
 

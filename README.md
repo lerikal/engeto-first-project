@@ -8,7 +8,6 @@ SPLNĚNO:
 
 NESPLNĚNO:
 - Úkol 3: Ošetření nesprávného vstupu
-
 - Úkol 6: Načtení ze souboru a uložení do souboru
 - Úkol 7: Ověření funkčnosti aplikace
 
