@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -6,23 +7,61 @@ import java.util.Comparator;
 public class Main {
 
     public static void main(String[] args) throws PlantException {
-        interniTesty();
+        //interniTesty();
+        //System.out.println(System.getProperty("user.dir"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
 
         // Načti seznam květin ze souboru kvetiny.txt.
+        PlantListManager myPlantList = new PlantListManager();
+        myPlantList = myPlantList.readPlantsListFromFile("kvetiny.txt");
 
         // Vypiš na obrazovku informace o zálivce pro všechny květiny ze seznamu.
+        System.out.println("Informace o zálivce:");
+        for (Plant plant: myPlantList.getPlantList()) {
+            System.out.println(plant.getWateringInfo());
+        }
 
         // Přidej novou květinu do seznamu (údaje si vymysli).
+        Plant myNewPlant= new Plant("Citron", "vyrostl z pecky", LocalDate.of(2022, 4, 15), LocalDate.of(2026, 4, 10), 5);
+        myPlantList.addNewPlant(myNewPlant);
 
         // Přidej 10 rostlin s popisem „Tulipán na prodej 1“ až „Tulipán na prodej 10“. Zasazeny byly dnes, zality také, frekvence zálivky je 14 dnů.
+        for (int i = 1; i<11; i++) {
+            Plant newPlant = new Plant("Tulipán "+i, "Tulipán na prodej "+i, LocalDate.now(), LocalDate.now(), 14);
+            myPlantList.addNewPlant(newPlant);
+        }
+        System.out.println("-------------------------");
 
         // Květinu na třetí pozici odeber ze seznamu (prodali jsme ji).
+        myPlantList.removePlantByIndex(2);
 
         // Ulož seznam květin do nového souboru a ověř, že je jeho obsah odpovídá provedeným změnám.
+        myPlantList.writePlantListToFile("kvetiny_new.txt", myPlantList);
 
         // Vyzkoušej opětovné načtení vygenerovaného souboru.
+        PlantListManager myNewPlantList = new PlantListManager();
+        myNewPlantList = myNewPlantList.readPlantsListFromFile("kvetiny_new.txt");
 
         // Vyzkoušej seřazení rostlin ve správci seznamu podle různých kritérií a výpis seřazeného seznamu.
+
+        // podle názvu -  jako výchozí varianta řazení rostlin
+        System.out.println("Seřazený list rostlin podle názvu:");
+        Collections.sort(myNewPlantList.plantList);
+
+        for (Plant plant : myNewPlantList.getPlantList()) {
+            System.out.print(plant.getName() + ", ");
+        }
+        System.out.println("");
+        System.out.println("-------------------------");
+
+        // podle data poslední zálivky
+        System.out.println("Seřazený list poslední zálivky:");
+        myNewPlantList.plantList.sort(Comparator.comparing(Plant::getWatering));
+
+        for (Plant plant : myNewPlantList.getPlantList()) {
+            System.out.println("Název rostliny: " + plant.getName() + ", Datum podlední zálivky: " + plant.getWatering().format(formatter) + ".");
+        }
+        System.out.println("-------------------------");
     }
 
     public static void interniTesty() throws PlantException {
@@ -144,6 +183,38 @@ public class Main {
             newPlantList.removePlantByIndex(100);
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Chyba při odebrání rostliny ze seznamu: " + e.getMessage());
+        }
+
+        // test report kvetiny-spatne-datum.txt
+        PlantListManager newPlantListManager = new PlantListManager();
+        try {
+            newPlantListManager.readPlantsListFromFile("kvetiny-spatne-datum.txt");
+        } catch (Exception e) {
+            System.out.println("Chyba při načítaní souboru: " + e.getMessage());
+        }
+
+        // test report kvetiny-spatne-frekvence.txt
+        PlantListManager newPlantListManager2 = new PlantListManager();
+        try {
+            newPlantListManager2.readPlantsListFromFile("kvetiny-spatne-frekvence.txt");
+        } catch (Exception e) {
+            System.out.println("Chyba při načítaní souboru: " + e.getMessage());
+        }
+
+        // test report kvetiny-prazdny-radek.txt
+        PlantListManager newPlantListManager3 = new PlantListManager();
+        try {
+            newPlantListManager3.readPlantsListFromFile("kvetiny-prazdny-radek.txt");
+        } catch (Exception e) {
+            System.out.println("Chyba při načítaní souboru: " + e.getMessage());
+        }
+
+        // test report kvetiny-malo-hodnot.txt
+        PlantListManager newPlantListManager4 = new PlantListManager();
+        try {
+            newPlantListManager4.readPlantsListFromFile("kvetiny-malo-hodnot.txt");
+        } catch (Exception e) {
+            System.out.println("Chyba při načítaní souboru: " + e.getMessage());
         }
     }
 }

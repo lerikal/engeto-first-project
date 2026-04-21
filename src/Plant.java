@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Plant implements Comparable<Plant> {
     private String name; // název
@@ -112,5 +113,33 @@ public class Plant implements Comparable<Plant> {
     @Override
     public int compareTo(Plant other) {
         return this.name.compareTo(other.name);
+    }
+
+    // metoda na parsování dat ze souboru
+    public static Plant parsePlant(String row) throws PlantException {
+        if (row == null || row.isBlank()) {
+            throw new PlantException(" Prázdný řádek v souboru.");
+        }
+
+        String[] items = row.split("\t", -1);
+        if (items.length < 5) {
+            throw new PlantException(" Na řádku je méně hodnot než je potřeba: " + items.length + " hodnot z 5.");
+        }
+
+        try {
+            String name = items[0];  // název
+            String notes = items[1]; // poznámky
+            LocalDate planted = LocalDate.parse(items[4]); // datum, kdy byly zasazena
+            LocalDate watering = LocalDate.parse(items[3]); // datum poslední zálivky
+            int frequencyOfWatering = Integer.parseInt(items[2]); // běžnou frekvenci zálivky ve dnech
+
+            return new Plant(name, notes, planted, watering, frequencyOfWatering);
+
+        } catch (NumberFormatException e) {
+            throw new PlantException(" Neplatné číslo: " + e.getMessage() + ".");
+        } catch (DateTimeParseException e) {
+            throw new PlantException(" Neplatný formát data: " + e.getMessage()+ ".");
+        }
+
     }
 }

@@ -1,6 +1,8 @@
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class PlantListManager {
     List<Plant> plantList = new ArrayList<>(); //  kolekce, uchovávající objekty s informacemi o květinách
@@ -51,5 +53,40 @@ public class PlantListManager {
             }
         }
         return plantsNeedToWater;
+    }
+
+    // načtení květin ze souboru
+    public PlantListManager readPlantsListFromFile(String fileName) {
+        PlantListManager plantList = new PlantListManager();
+
+        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(fileName)))) {
+            while (scanner.hasNextLine()) {
+                try {
+                    Plant plant = Plant.parsePlant(scanner.nextLine());
+                    plantList.addNewPlant(plant);
+
+                } catch (PlantException e) {
+                    System.out.println("Nepodařilo se přidat rostlinu: " + e.getMessage());
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Soubor nenalezen: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Obecná chyba při načítání: " + e.getMessage());
+        }
+
+        return plantList;
+    }
+
+    // uložení květin do souboru
+    public void writePlantListToFile(String fileName, PlantListManager plantList) {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName)))
+        ) {
+            for (Plant plant : plantList.getPlantList()) {
+                writer.println(plant.getName() + "\t" + plant.getNotes() + "\t" + plant.getFrequencyOfWatering() + "\t" + plant.getWatering() + "\t" + plant.getPlanted());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
