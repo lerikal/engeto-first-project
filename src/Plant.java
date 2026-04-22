@@ -140,6 +140,5 @@ public class Plant implements Comparable<Plant> {
         } catch (DateTimeParseException e) {
             throw new PlantException(" Neplatný formát data: " + e.getMessage()+ ".");
         }
-
     }
 }

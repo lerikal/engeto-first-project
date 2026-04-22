@@ -70,11 +70,10 @@ public class PlantListManager {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Soubor nenalezen: " + e.getMessage());
+            System.err.println("Soubor nenalezen: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Obecná chyba při načítání: " + e.getMessage());
+            System.err.println("Obecná chyba při načítání: " + e.getMessage());
         }
-
         return plantList;
     }
 
@@ -85,7 +84,8 @@ public class PlantListManager {
             for (Plant plant : plantList.getPlantList()) {
                 writer.println(plant.getName() + "\t" + plant.getNotes() + "\t" + plant.getFrequencyOfWatering() + "\t" + plant.getWatering() + "\t" + plant.getPlanted());
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.err.println("Chyba při zápisu do souboru: " + fileName);
             e.printStackTrace();
         }
     }

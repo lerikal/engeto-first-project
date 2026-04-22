@@ -7,7 +7,7 @@ import java.util.Comparator;
 public class Main {
 
     public static void main(String[] args) throws PlantException {
-        //interniTesty();
+        //interniTesty(); // testy pro vyvoj
         //System.out.println(System.getProperty("user.dir"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
 
@@ -48,10 +48,16 @@ public class Main {
         System.out.println("Seřazený list rostlin podle názvu:");
         Collections.sort(myNewPlantList.plantList);
 
-        for (Plant plant : myNewPlantList.getPlantList()) {
-            System.out.print(plant.getName() + ", ");
+        for (int i = 0; i < myNewPlantList.getPlantList().size(); i++) {
+            Plant plant = myNewPlantList.getPlantList().get(i);
+
+            if (i == myNewPlantList.getPlantList().size() - 1) {
+                System.out.print(plant.getName() + ".");
+            } else {
+                System.out.print(plant.getName() + ", ");
+            }
         }
-        System.out.println("");
+        System.out.println();
         System.out.println("-------------------------");
 
         // podle data poslední zálivky
