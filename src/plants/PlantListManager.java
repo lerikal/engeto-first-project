@@ -71,7 +71,7 @@ public class PlantListManager {
             }
         } catch (FileNotFoundException e) {
             System.err.println("Soubor nenalezen: " + e.getMessage());
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Obecná chyba při načítání: " + e.getMessage());
         }
         return plantList;
