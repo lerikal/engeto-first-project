@@ -1,3 +1,7 @@
+import plants.Plant;
+import plants.PlantException;
+import plants.PlantListManager;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -46,7 +50,7 @@ public class Main {
 
         // podle názvu -  jako výchozí varianta řazení rostlin
         System.out.println("Seřazený list rostlin podle názvu:");
-        Collections.sort(myNewPlantList.plantList);
+        Collections.sort(myNewPlantList.getPlantList());
 
         for (int i = 0; i < myNewPlantList.getPlantList().size(); i++) {
             Plant plant = myNewPlantList.getPlantList().get(i);
@@ -62,7 +66,7 @@ public class Main {
 
         // podle data poslední zálivky
         System.out.println("Seřazený list poslední zálivky:");
-        myNewPlantList.plantList.sort(Comparator.comparing(Plant::getWatering));
+        myNewPlantList.getPlantList().sort(Comparator.comparing(Plant::getWatering));
 
         for (Plant plant : myNewPlantList.getPlantList()) {
             System.out.println("Název rostliny: " + plant.getName() + ", Datum podlední zálivky: " + plant.getWatering().format(formatter) + ".");
@@ -126,14 +130,14 @@ public class Main {
 
         // podle názvu -  jako výchozí varianta řazení rostlin
         System.out.println("Seřazený list podle názvu:");
-        Collections.sort(newPlantList.plantList);
+        Collections.sort(newPlantList.getPlantList());
         for (Plant plant : newPlantList.getPlantList()) {
             System.out.println(plant.getName());
         }
 
         // podle data poslední zálivky
         System.out.println("Seřazený list poslední zálivky:");
-        newPlantList.plantList.sort(Comparator.comparing(Plant::getWatering));
+        newPlantList.getPlantList().sort(Comparator.comparing(Plant::getWatering));
 
         for (Plant plant : newPlantList.getPlantList()) {
             System.out.println(plant.getName() + " " + plant.getWatering());
@@ -195,7 +199,7 @@ public class Main {
         PlantListManager newPlantListManager = new PlantListManager();
         try {
             newPlantListManager.readPlantsListFromFile("kvetiny-spatne-datum.txt");
-        } catch (Exception e) {
+        } catch (PlantException e) {
             System.out.println("Chyba při načítaní souboru: " + e.getMessage());
         }
 
@@ -203,7 +207,7 @@ public class Main {
         PlantListManager newPlantListManager2 = new PlantListManager();
         try {
             newPlantListManager2.readPlantsListFromFile("kvetiny-spatne-frekvence.txt");
-        } catch (Exception e) {
+        } catch (PlantException e) {
             System.out.println("Chyba při načítaní souboru: " + e.getMessage());
         }
 
@@ -211,7 +215,7 @@ public class Main {
         PlantListManager newPlantListManager3 = new PlantListManager();
         try {
             newPlantListManager3.readPlantsListFromFile("kvetiny-prazdny-radek.txt");
-        } catch (Exception e) {
+        } catch (PlantException e) {
             System.out.println("Chyba při načítaní souboru: " + e.getMessage());
         }
 
@@ -219,7 +223,7 @@ public class Main {
         PlantListManager newPlantListManager4 = new PlantListManager();
         try {
             newPlantListManager4.readPlantsListFromFile("kvetiny-malo-hodnot.txt");
-        } catch (Exception e) {
+        } catch (PlantException e) {
             System.out.println("Chyba při načítaní souboru: " + e.getMessage());
         }
     }

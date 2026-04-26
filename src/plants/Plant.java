@@ -1,3 +1,5 @@
+package plants;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -123,7 +125,7 @@ public class Plant implements Comparable<Plant> {
 
         String[] items = row.split("\t", -1);
         if (items.length < 5) {
-            throw new PlantException(" Na řádku je méně hodnot než je potřeba: " + items.length + " hodnot z 5.");
+            throw new PlantException(" Na řádku je méně hodnot než je potřeba: " + items.length + " hodnot z 5. Řádek: " + row + ".");
         }
 
         try {
@@ -136,9 +138,9 @@ public class Plant implements Comparable<Plant> {
             return new Plant(name, notes, planted, watering, frequencyOfWatering);
 
         } catch (NumberFormatException e) {
-            throw new PlantException(" Neplatné číslo: " + e.getMessage() + ".");
+            throw new PlantException(" Neplatné číslo: " + items[2] + ".");
         } catch (DateTimeParseException e) {
-            throw new PlantException(" Neplatný formát data: " + e.getMessage()+ ".");
+            throw new PlantException(" Neplatný formát data. Řádek: " + row + ".");
         }
     }
 }

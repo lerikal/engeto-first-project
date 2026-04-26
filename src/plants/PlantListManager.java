@@ -1,3 +1,5 @@
+package plants;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,37 +58,44 @@ public class PlantListManager {
     }
 
     // načtení květin ze souboru
-    public PlantListManager readPlantsListFromFile(String fileName) {
+    public PlantListManager readPlantsListFromFile(String fileName) throws PlantException {
         PlantListManager plantList = new PlantListManager();
+        String path = "data" + File.separator + fileName;
 
-        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(fileName)))) {
+        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(path)))) {
             while (scanner.hasNextLine()) {
                 try {
                     Plant plant = Plant.parsePlant(scanner.nextLine());
                     plantList.addNewPlant(plant);
 
                 } catch (PlantException e) {
-                    System.out.println("Nepodařilo se přidat rostlinu: " + e.getMessage());
+                    throw new PlantException("Nepodařilo se přidat rostlinu: " +  e.getMessage() + ".");
                 }
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Soubor nenalezen: " + e.getMessage());
+            throw new PlantException("Soubor nenalezen: " +  e.getMessage() + ".");
         } catch (IOException e) {
-            System.err.println("Obecná chyba při načítání: " + e.getMessage());
+            throw new PlantException("Obecná chyba při načítání: " +  e.getMessage() + ".");
         }
         return plantList;
     }
 
     // uložení květin do souboru
-    public void writePlantListToFile(String fileName, PlantListManager plantList) {
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName)))
+    public void writePlantListToFile(String fileName, PlantListManager plantList) throws PlantException {
+        String path = "data" + File.separator + fileName;
+        String delimiter = "\t";
+
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(path)))
         ) {
             for (Plant plant : plantList.getPlantList()) {
-                writer.println(plant.getName() + "\t" + plant.getNotes() + "\t" + plant.getFrequencyOfWatering() + "\t" + plant.getWatering() + "\t" + plant.getPlanted());
+                writer.println(plant.getName() + delimiter
+                             + plant.getNotes() + delimiter
+                             + plant.getFrequencyOfWatering()
+                             + delimiter + plant.getWatering()
+                             + delimiter + plant.getPlanted());
             }
         } catch (IOException e) {
-            System.err.println("Chyba při zápisu do souboru: " + fileName);
-            e.printStackTrace();
+            throw new PlantException("Chyba při zápisu do souboru: " + fileName + " " + e.getMessage() + ".");
         }
     }
 }
