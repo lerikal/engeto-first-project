@@ -1,4 +1,4 @@
-package plants;
+package com.engeto.plants;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +12,7 @@ public class Plant implements Comparable<Plant> {
     private int frequencyOfWatering; // běžnou frekvenci zálivky ve dnech
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
+    private static final String DELIMITER = "\t";
 
     // Konsturktory
 
@@ -91,8 +92,10 @@ public class Plant implements Comparable<Plant> {
     }
 
     // Metody
-
-    // Vrátí textovou informaci obsahující název květiny, datum poslední zálivky a datum doporučené další zálivky.
+    /**
+     * Vrátí textovou informaci obsahující název květiny, datum poslední zálivky a datum doporučené další zálivky.
+     * @return obsahující název květiny, datum poslední zálivky a datum doporučené další zálivky.
+     */
     public String getWateringInfo() {
         LocalDate recommendedWatering = this.getWatering().plusDays(this.frequencyOfWatering);
 
@@ -101,8 +104,9 @@ public class Plant implements Comparable<Plant> {
            + ", datum doporučené další zálivky: " + recommendedWatering.format(formatter)
            ;
     }
-
-    // Nastaví datum poslední zálivky na dnešní den.
+    /**
+     * Nastaví datum poslední zálivky na dnešní den.
+     */
     public void doWateringNow() throws PlantException {
         if (LocalDate.now().isBefore(planted)) {
             throw new PlantException("Nelze nastavit datum poslední zálevky na dnešní datum. Datum zasazení je větší než dnešní datum. Datum zasazení je: " + planted.format(formatter));
@@ -110,20 +114,25 @@ public class Plant implements Comparable<Plant> {
         this.watering = LocalDate.now();
     }
 
-    // Možnost seřadit rostliny v seznamu podle názvu.
-    // Řazení podle názvu rostliny nastav jako výchozí variantu řazení rostlin.
+    /**
+     * Řazení podle názvu rostliny nastav jako výchozí variantu řazení rostlin.
+     * @return celé číslo, které říká, jak si dva objekty stojí: záporné číslo (< 0) - this.name je lexikograficky menší než other.name, 0 → oba názvy jsou stejné, kladné číslo (> 0) → this.name je lexikograficky větší než other.name
+     */
     @Override
     public int compareTo(Plant other) {
         return this.name.compareTo(other.name);
     }
 
-    // metoda na parsování dat ze souboru
+    /**
+     * Metoda na parsování dat ze souboru.
+     * @return objekt třidy Plant.
+     */
     public static Plant parsePlant(String row) throws PlantException {
         if (row == null || row.isBlank()) {
             throw new PlantException(" Prázdný řádek v souboru.");
         }
 
-        String[] items = row.split("\t", -1);
+        String[] items = row.split(DELIMITER, -1);
         if (items.length < 5) {
             throw new PlantException(" Na řádku je méně hodnot než je potřeba: " + items.length + " hodnot z 5. Řádek: " + row + ".");
         }
