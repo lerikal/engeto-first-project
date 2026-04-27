@@ -1,4 +1,4 @@
-package plants;
+package com.engeto.plants;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -9,18 +9,24 @@ import java.util.Scanner;
 public class PlantListManager {
     List<Plant> plantList = new ArrayList<>(); //  kolekce, uchovávající objekty s informacemi o květinách
 
+    private static final String DELIMITER = "\t";
+
     public List<Plant> getPlantList() {
-        return plantList;
+        return new ArrayList<>(plantList);
     }
 
     // Metody
-
-    // přidání nové květiny
+    /**
+     * Metoda na přidání nové květiny.
+     */
     public void addNewPlant(Plant plant) {
         plantList.add(plant);
     }
 
-    // získání květiny na zadaném indexu
+    /**
+     * Metoda na získání květiny na zadaném indexu.
+     * @return rostlina (objekt třidy Plant)
+     */
     public Plant getPlantByIndex(int index) {
         if (index < 0 || index >= plantList.size()) {
             throw new IndexOutOfBoundsException("Neplatný index: " + index + ".");
@@ -28,7 +34,9 @@ public class PlantListManager {
         return plantList.get(index);
     }
 
-    // odebrání květiny ze seznamu
+    /**
+     * Metoda na odebrání květiny ze seznamu.
+     */
     public void removePlantByIndex(int index) {
         if (index < 0 || index >= plantList.size()) {
             throw new IndexOutOfBoundsException("Neplatný index: " + index + ".");
@@ -36,13 +44,17 @@ public class PlantListManager {
         plantList.remove(index);
     }
 
-    // získání kopie seznamu květin
+    /**
+     * Metoda na získání kopie seznamu květin.
+     */
     public void copyPlantList(List<Plant> plantList) {
         this.plantList = new ArrayList<>(plantList);
     }
 
-    // metoda, která vrátí seznam rostlin, které je třeba zalít
-    // (Jejich datum poslední zálivky je starší než počet dnů, kdy mají být zalité.)
+    /**
+     * Metoda, která vrátí seznam rostlin, které je třeba zalít.
+     * @return seznam rostlin
+     */
     public PlantListManager getPlantsNeedToWater() {
         PlantListManager plantsNeedToWater = new PlantListManager();
         LocalDate now = LocalDate.now();
@@ -57,7 +69,10 @@ public class PlantListManager {
         return plantsNeedToWater;
     }
 
-    // načtení květin ze souboru
+    /**
+     * Metoda na načtení květin ze souboru.
+     * @return seznam rostlin
+     */
     public PlantListManager readPlantsListFromFile(String fileName) throws PlantException {
         PlantListManager plantList = new PlantListManager();
         String path = "data" + File.separator + fileName;
@@ -80,19 +95,20 @@ public class PlantListManager {
         return plantList;
     }
 
-    // uložení květin do souboru
+    /**
+     * Uložení květin do souboru
+     */
     public void writePlantListToFile(String fileName, PlantListManager plantList) throws PlantException {
         String path = "data" + File.separator + fileName;
-        String delimiter = "\t";
 
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(path)))
         ) {
             for (Plant plant : plantList.getPlantList()) {
-                writer.println(plant.getName() + delimiter
-                             + plant.getNotes() + delimiter
+                writer.println(plant.getName() + DELIMITER
+                             + plant.getNotes() + DELIMITER
                              + plant.getFrequencyOfWatering()
-                             + delimiter + plant.getWatering()
-                             + delimiter + plant.getPlanted());
+                             + DELIMITER + plant.getWatering()
+                             + DELIMITER + plant.getPlanted());
             }
         } catch (IOException e) {
             throw new PlantException("Chyba při zápisu do souboru: " + fileName + " " + e.getMessage() + ".");

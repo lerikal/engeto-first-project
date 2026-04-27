@@ -1,4 +1,4 @@
-package plants;
+package com.engeto.plants;
 
 public class PlantException extends Exception {
     public PlantException(String message) {

@@ -1,6 +1,6 @@
-import plants.Plant;
-import plants.PlantException;
-import plants.PlantListManager;
+import com.engeto.plants.Plant;
+import com.engeto.plants.PlantException;
+import com.engeto.plants.PlantListManager;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
