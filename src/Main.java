@@ -6,18 +6,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 
 public class Main {
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
+
     public static void main(String[] args) throws PlantException {
         //interniTesty(); // testy pro vyvoj
         //System.out.println(System.getProperty("user.dir"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
 
         // Načti seznam květin ze souboru kvetiny.txt.
-        PlantListManager myPlantList = new PlantListManager();
-        myPlantList = myPlantList.readPlantsListFromFile("kvetiny.txt");
+        PlantListManager myPlantList = new PlantListManager().readPlantsListFromFile("kvetiny.txt");
 
         // Vypiš na obrazovku informace o zálivce pro všechny květiny ze seznamu.
         System.out.println("Informace o zálivce:");
@@ -43,22 +44,23 @@ public class Main {
         myPlantList.writePlantListToFile("kvetiny_new.txt", myPlantList);
 
         // Vyzkoušej opětovné načtení vygenerovaného souboru.
-        PlantListManager myNewPlantList = new PlantListManager();
-        myNewPlantList = myNewPlantList.readPlantsListFromFile("kvetiny_new.txt");
+        PlantListManager myNewPlantList = new PlantListManager().readPlantsListFromFile("kvetiny_new.txt");
 
         // Vyzkoušej seřazení rostlin ve správci seznamu podle různých kritérií a výpis seřazeného seznamu.
 
         // podle názvu -  jako výchozí varianta řazení rostlin
         System.out.println("Seřazený list rostlin podle názvu:");
-        Collections.sort(myNewPlantList.getPlantList());
 
-        for (int i = 0; i < myNewPlantList.getPlantList().size(); i++) {
-            Plant plant = myNewPlantList.getPlantList().get(i);
+        List<Plant> sortedByName = myNewPlantList.getPlantList();
+        Collections.sort(sortedByName);
 
-            if (i == myNewPlantList.getPlantList().size() - 1) {
-                System.out.print(plant.getName() + ".");
+        for (int i = 0; i < sortedByName.size(); i++) {
+            System.out.print(sortedByName.get(i).getName());
+
+            if (i < sortedByName.size() - 1) {
+                System.out.print(", ");
             } else {
-                System.out.print(plant.getName() + ", ");
+                System.out.print(".");
             }
         }
         System.out.println();
@@ -66,10 +68,11 @@ public class Main {
 
         // podle data poslední zálivky
         System.out.println("Seřazený list poslední zálivky:");
-        myNewPlantList.getPlantList().sort(Comparator.comparing(Plant::getWatering));
+        List<Plant> sortedByWatering = myNewPlantList.getPlantList();
+        sortedByWatering.sort(Comparator.comparing(Plant::getWatering));
 
         for (Plant plant : myNewPlantList.getPlantList()) {
-            System.out.println("Název rostliny: " + plant.getName() + ", Datum podlední zálivky: " + plant.getWatering().format(formatter) + ".");
+            System.out.println("Název rostliny: " + plant.getName() + ", Datum podlední zálivky: " + plant.getWatering().format(FORMATTER) + ".");
         }
         System.out.println("-------------------------");
     }
@@ -120,9 +123,9 @@ public class Main {
         Plant newPlant4 = new Plant("Plant4", "test", LocalDate.of(2025, 4, 1), LocalDate.of(2026, 2, 1), 2);
         newPlantList.addNewPlant(newPlant4);
 
-        PlantListManager PlantsNeedToWater = newPlantList.getPlantsNeedToWater();
+        PlantListManager plantsNeedToWater = newPlantList.getPlantsNeedToWater();
 
-        for (Plant plant : PlantsNeedToWater.getPlantList()) {
+        for (Plant plant : plantsNeedToWater.getPlantList()) {
             System.out.println("Potřebuji zalit " + plant.getName());
         }
 
