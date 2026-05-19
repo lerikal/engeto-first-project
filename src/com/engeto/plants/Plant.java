@@ -11,7 +11,7 @@ public class Plant implements Comparable<Plant> {
     private LocalDate watering; // datum poslední zálivky
     private int frequencyOfWatering; // běžnou frekvenci zálivky ve dnech
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d. M. yyyy"); // format pro datum
     private static final String DELIMITER = "\t";
 
     // Konsturktory
@@ -72,9 +72,13 @@ public class Plant implements Comparable<Plant> {
 
     public void setWatering(LocalDate watering) throws PlantException {
         // zadávání data poslední zálivky — nesmí být starší než datum zasazení rostliny
+        if (watering == null) {
+            throw new PlantException("Datum poslední zálivky nesmí být prázdný.");
+        }
+
         if (watering.isBefore(planted)) {
-            throw new PlantException("Datum poslední zálivky nesmí být starší než datum zasazení rostliny! Datum zasazení je: " + planted.format(formatter) +
-                    ". Datum poslední zálivky je: " + watering.format(formatter) + ".");
+            throw new PlantException("Datum poslední zálivky nesmí být starší než datum zasazení rostliny! Datum zasazení je: " + planted.format(FORMATTER) +
+                    ". Datum poslední zálivky je: " + watering.format(FORMATTER) + ".");
         }
         this.watering = watering;
     }
@@ -93,30 +97,47 @@ public class Plant implements Comparable<Plant> {
 
     // Metody
     /**
-     * Vrátí textovou informaci obsahující název květiny, datum poslední zálivky a datum doporučené další zálivky.
-     * @return obsahující název květiny, datum poslední zálivky a datum doporučené další zálivky.
+     * Vrátí textovou informaci o rostlině a její zálivce.
+     *
+     * Obsahuje:
+     * - název rostliny
+     * - datum poslední zálivky
+     * - datum doporučené další zálivky
+     *
+     * @return textová informace o zálivce
      */
     public String getWateringInfo() {
         LocalDate recommendedWatering = this.getWatering().plusDays(this.frequencyOfWatering);
 
         return "Název květiny: " + this.getName()
-           + ", datum poslední zálivky: " + this.getWatering().format(formatter)
-           + ", datum doporučené další zálivky: " + recommendedWatering.format(formatter)
+           + ", datum poslední zálivky: " + this.getWatering().format(FORMATTER)
+           + ", datum doporučené další zálivky: " + recommendedWatering.format(FORMATTER)
            ;
     }
+
     /**
-     * Nastaví datum poslední zálivky na dnešní den.
+     * Nastaví datum poslední zálivky na dnešní datum.
+     *
+     * Pokud je dnešní datum menší než datum zasazení, vyhodí výjimku.
+     *
+     * @throws PlantException pokud je dnešní datum před datem zasazení
      */
     public void doWateringNow() throws PlantException {
         if (LocalDate.now().isBefore(planted)) {
-            throw new PlantException("Nelze nastavit datum poslední zálevky na dnešní datum. Datum zasazení je větší než dnešní datum. Datum zasazení je: " + planted.format(formatter));
+            throw new PlantException("Nelze nastavit datum poslední zálevky na dnešní datum. Datum zasazení je větší než dnešní datum. Datum zasazení je: " + planted.format(FORMATTER));
         }
         this.watering = LocalDate.now();
     }
 
     /**
-     * Řazení podle názvu rostliny nastav jako výchozí variantu řazení rostlin.
-     * @return celé číslo, které říká, jak si dva objekty stojí: záporné číslo (< 0) - this.name je lexikograficky menší než other.name, 0 → oba názvy jsou stejné, kladné číslo (> 0) → this.name je lexikograficky větší než other.name
+     * Výchozí řazení rostlin podle názvu.
+     *
+     * Porovnává názvy rostlin lexikograficky.
+     *
+     * @param other druhá rostlina pro porovnání
+     * @return záporné číslo, pokud je název této rostliny menší,
+     *         0 pokud jsou názvy stejné,
+     *         kladné číslo, pokud je název této rostliny větší
      */
     @Override
     public int compareTo(Plant other) {
@@ -124,8 +145,14 @@ public class Plant implements Comparable<Plant> {
     }
 
     /**
-     * Metoda na parsování dat ze souboru.
-     * @return objekt třidy Plant.
+     * Vytvoří objekt rostliny z řádku načteného ze souboru.
+     *
+     * Očekávaný formát řádku:
+     * název, poznámka, frekvence zálivky, datum zálivky, datum zasazení (odděleno tabulátorem)
+     *
+     * @param row řádek se záznamem o rostlině
+     * @return objekt typu Plant
+     * @throws PlantException pokud je řádek neplatný nebo obsahuje chybná data
      */
     public static Plant parsePlant(String row) throws PlantException {
         if (row == null || row.isBlank()) {
